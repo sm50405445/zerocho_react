@@ -1,73 +1,70 @@
-import React,{PureComponent} from 'react'
+import React,{PureComponent,useState,useRef} from 'react'
 
-class ResponseCheck extends PureComponent{
-    state = {
-        state:'waiting',
-        message:'클릭해서 시작하세요',
-        result:[]
-    }
+const ResponseCheck = () => {
+    const [state,setState] = useState('waiting')
+    const [message,setMessage] = useState('클릭해서 시작하세요')
+    const [result,setResult] = useState([])
+    
+    //값이 바뀌어도 렌더링이 필요없는 값들은 useRef 사용
+    const timeOut = useRef(null)
+    const startTime = useRef()
+    const endTime = useRef()
 
-    //렌더링 x
-    timeout
-    startTime
-    endTime
-
-    onClickScreen = () => {
-        const{state,message,result} = this.state
+    const onClickScreen = () => {
         if(state==='waiting'){
-            this.setState({
-                state:'ready',
-                message:'초록색이 되면 클릭하세요'
-            })
-            this.timeout = setTimeout(()=>{
+            setState('ready')
+            setMessage('초록색이 되면 클릭하세요')
+
+            timeOut.current = setTimeout(()=>{
                 this.setState({
                     state:'now',
                     message:'지금 클릭'
                 })
+                startTime.current = new Date()
             },Math.floor(Math.random()*1000)+2000)
-            this.startTime = new Date()
+            
         }else if(state==='ready'){//성급히 클릭
-            clearTimeout(this.timeout)
-            this.setState({
-                state:'waiting',
-                message:'너무 성급합니다 초록색 후 클릭하세요'
-            })
-
+            clearTimeout(timeOut.current)
+            setState('waiting')
+            setMessage('너무 성급합니다 초록색 후 클릭하세요')
         }else if(state==='now'){
-            this.endTime = new Date()
-            this.setState((prevState)=>{
-                return{
-                    state:'waiting',
-                    message:'클릭해서 시작하세요',
-                    result:[...prevState.result,this.endTime - this.startTime]
-                }
+            endTime.current = new Date()
+            setState('waiting')
+            setMessage('클릭해서 시작하세요')
+            setResult((prevResult)=>{
+                return[...prevResult,endTime.current - startTime.current]
             })
         }
     }
 
-    renderAverage = () => {
-        const {result} = this.state
-        return result.length===0
-        ? null
-        : <div>평균 시간: {result.reduce((a,c)=>a+c)/result.length}ms</div>
+    const onReset = () => {
+        setResult([])
     }
 
-    render(){
-        return(
-            <>
-                <div 
-                    id="screen"
-                    className={this.state.state}
-                    onClick={this.onClickScreen}
-                >
-                    {this.state.message}
-                </div>
-                {/*false,undefined,null jsx에서 태그 없음을 뜻함 */}
-                {this.renderAverage()}
-                
-            </>
-        )
+    const renderAverage = () => {
+        return result.length===0
+        ? null
+        : 
+        <>
+          <div>평균 시간: {result.reduce((a,c)=>a+c)/result.length}ms</div>
+          <button onClick={onReset}>리셋</button>
+        </>
     }
+
+    return(
+        <>
+            <div 
+                id="screen"
+                className={state}
+                onClick={onClickScreen}
+            >
+                {message}
+            </div>
+            {/*false,undefined,null jsx에서 태그 없음을 뜻함 */}
+            {renderAverage()}
+            
+        </>
+    )
 }
 
 export default ResponseCheck
