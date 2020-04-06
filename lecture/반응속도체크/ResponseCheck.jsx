@@ -7,8 +7,8 @@ const ResponseCheck = () => {
     
     //값이 바뀌어도 렌더링이 필요없는 값들은 useRef 사용
     const timeOut = useRef(null)
-    const startTime = useRef()
-    const endTime = useRef()
+    const startTime = useRef(0)
+    const endTime = useRef(0)
 
     const onClickScreen = () => {
         if(state==='waiting'){
@@ -16,10 +16,8 @@ const ResponseCheck = () => {
             setMessage('초록색이 되면 클릭하세요')
 
             timeOut.current = setTimeout(()=>{
-                this.setState({
-                    state:'now',
-                    message:'지금 클릭'
-                })
+                setState('now')
+                setMessage('지금 클릭')
                 startTime.current = new Date()
             },Math.floor(Math.random()*1000)+2000)
             
