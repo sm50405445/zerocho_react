@@ -2,9 +2,8 @@ import React,{PureComponent} from 'react'
 import ReactDom from 'react-dom'
 import {hot} from 'react-hot-loader/root'
 
-import RSP from './RSP'
-import RSPHooks from './RSPHooks'
+import ResponseCheck from './ResponseCheck'
 
-const Hot = hot(RSPHooks)
+const Hot = hot(ResponseCheck)
 
 ReactDom.render(<Hot />,document.querySelector('#root'))

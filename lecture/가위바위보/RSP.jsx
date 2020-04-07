@@ -33,7 +33,7 @@ class RSP extends Component{
 
     //렌더가 처음 성공적이면 해당 함수 실행, 여기에 비동기 요청 많이
     componentDidMount(){
-        this.interval = this.changeHand()
+        this.interval = setInterval(this.changeHand())
     }
 
     //리렌더링 후
@@ -46,7 +46,8 @@ class RSP extends Component{
         clearInterval(this.interval)
     }
 
-    onClickBtn(choice){
+    onClickBtn = (choice) => () => {
+        
         const {imgCoord} = this.state
         clearInterval(this.interval)
         const myScore = scores[choice]
@@ -71,7 +72,9 @@ class RSP extends Component{
                 }
             })
         }
-        this.interval = this.changeHand()
+        setTimeout(()=>{
+            this.interval = setInterval(this.changeHand,1000)
+        },2000)
     }
 
     changeHand = () => {
@@ -100,9 +103,9 @@ class RSP extends Component{
             <>
                 <div id="computer" style={{background: `url(https://en.pimg.jp/023/182/267/1/23182267.jpg) ${imgCoord} 0`}}></div>
                 <div>
-                    <button id="rock" className="btn" onClick={()=>this.onClickBtn('바위')}>바위</button>
-                    <button id="scissor" className="btn" onClick={()=>this.onClickBtn('가위')}>가위</button>
-                    <button id="paper" className="btn" onClick={()=>this.onClickBtn('보')}>보</button>
+                    <button id="rock" className="btn" onClick={this.onClickBtn('바위')}>바위</button>
+                    <button id="scissor" className="btn" onClick={this.onClickBtn('가위')}>가위</button>
+                    <button id="paper" className="btn" onClick={this.onClickBtn('보')}>보</button>
                 </div>
                 <div>{result}</div>
                 <div>현재 {score}점</div>
