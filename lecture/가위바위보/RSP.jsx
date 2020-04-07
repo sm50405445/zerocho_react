@@ -16,10 +16,16 @@ const scores = {
     보:-1
 }
 
+const computerChoice = (imgCoord) => {
+    return Object.entries(rspCoords).find(function(v){
+        return v[1]===imgCoord
+    })[0]
+}
+
 class RSP extends Component{
     state={
         result:'',
-        imgCoord:0,
+        imgCoord:rspCoords.바위,
         score:0
     }
 
@@ -27,6 +33,48 @@ class RSP extends Component{
 
     //렌더가 처음 성공적이면 해당 함수 실행, 여기에 비동기 요청 많이
     componentDidMount(){
+        this.interval = this.changeHand()
+    }
+
+    //리렌더링 후
+    componentDidUpdate(){
+
+    }
+
+    //컴포넌트가 제거되기 직전 부모가 자식 삭제할 때,비동기 요청 정리 여기서
+    componentWillUnmount(){
+        clearInterval(this.interval)
+    }
+
+    onClickBtn(choice){
+        const {imgCoord} = this.state
+        clearInterval(this.interval)
+        const myScore = scores[choice]
+        const cpuScore = scores[computerChoice(imgCoord)]
+        const diff = myScore-cpuScore
+        if(diff===0){
+            this.setState({
+                result:'비겼습니다'
+            })
+        }else if([-1,2].includes(diff)){
+            this.setState((prevState)=>{
+                return{
+                    result:'이겼습니다',
+                    score:prevState.score +1
+                }
+            })
+        }else{
+            this.setState((prevState)=>{
+                return{
+                    result:'졌습니다',
+                    score:prevState.score -1
+                }
+            })
+        }
+        this.interval = this.changeHand()
+    }
+
+    changeHand = () => {
         this.interval = setInterval(()=>{
             const {imgCoord} = this.state
             if(imgCoord===rspCoords.바위){
@@ -43,20 +91,6 @@ class RSP extends Component{
                 })
             }
         },1000)
-    }
-
-    //리렌더링 후
-    componentDidUpdate(){
-
-    }
-
-    //컴포넌트가 제거되기 직전 부모가 자식 삭제할 때,비동기 요청 정리 여기서
-    componentWillUnmount(){
-        clearInterval(this.interval)
-    }
-
-    onClickBtn(choice){
-
     }
 
     render(){
