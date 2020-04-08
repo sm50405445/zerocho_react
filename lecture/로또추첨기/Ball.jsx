@@ -1,6 +1,6 @@
 import React,{PureComponent,memo} from 'react'
 
-const Ball = memo(({number}) =>{
+const Ball = ({number}) =>{
     
         let background;
         if(number<=10){
@@ -15,10 +15,10 @@ const Ball = memo(({number}) =>{
             background='green'
         }
         return(
-            <div className="ball" style={{background}}>number</div>
+            <div className="ball" style={{background}}>{number}</div>
         )
     
-})
+}
 
 // class Ball extends PureComponent{
 //     render(){

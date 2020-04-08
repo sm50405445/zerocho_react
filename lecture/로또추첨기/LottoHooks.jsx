@@ -1,4 +1,4 @@
-import React,{Component} from 'react'
+import React,{useState,useRef} from 'react'
 import Ball from './Ball'
 
 function getWinNumbers(){
