@@ -21,6 +21,15 @@ const Lotto = () => {
     const [redo,setRedo] = useState(false)
     const timeouts = useRef([])
 
+    const mounted = useRef(false)
+    useEffect(()=>{
+        if(!mounted.current){
+            mounted.current=true
+        }else{
+            //ajax
+        }
+    },[]) //componentDidUpdate에서만
+
     useEffect(()=>{
         for(let i = 0 ; i<winNumbers.length-1;i++){
             timeouts.current[i] = setTimeout(()=>{
